@@ -67,11 +67,16 @@ public class IonicKeyboard extends CordovaPlugin {
                             Rect r = new Rect();
                             //r will be populated with the coordinates of your view that area still visible.
                             rootView.getWindowVisibleDisplayFrame(r);
-                            
+
                             PluginResult result;
 
-                            int heightDiff = rootView.getRootView().getHeight() - r.bottom;
+                            DisplayMetrics dm = new DisplayMetrics();
+                            cordova.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+                            int screenHeight = dm.heightPixels;
+
+                            int heightDiff = screenHeight - r.bottom;
                             int pixelHeightDiff = (int)(heightDiff / density);
+
                             if (pixelHeightDiff > 100 && pixelHeightDiff != previousHeightDiff) { // if more than 100 pixels, its probably a keyboard...
                             	String msg = "S" + Integer.toString(pixelHeightDiff);
                                 result = new PluginResult(PluginResult.Status.OK, msg);
@@ -89,8 +94,8 @@ public class IonicKeyboard extends CordovaPlugin {
                     };
 
                     rootView.getViewTreeObserver().addOnGlobalLayoutListener(list);
-                	
-                	
+
+
                     PluginResult dataResult = new PluginResult(PluginResult.Status.OK);
                     dataResult.setKeepCallback(true);
                     callbackContext.sendPluginResult(dataResult);
